@@ -1,0 +1,48 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap" *ngIf="doc; else notready">
+    <h1 class="z-title z-rise">Review &amp; save</h1>
+    <p class="z-sub z-rise">Check where we filed this. You can change anything.</p>
+
+    <div class="preview z-card z-rise">
+      <img *ngIf="isImage; else file" [src]="url" alt="" />
+      <ng-template #file><div class="file"><ion-icon name="document-text-outline"></ion-icon><b>{{ doc.mime === 'application/pdf' ? 'PDF document' : 'File' }}</b></div></ng-template>
+    </div>
+
+    <div class="banner z-rise" [class.warn]="!detected" style="animation-delay:.05s">
+      <ion-icon [name]="detected ? 'sparkles-outline' : 'alert-circle-outline'"></ion-icon>
+      <div *ngIf="detected; else unknown">
+        <b>Looks like {{ detected.label }}</b>
+        <span>{{ conf }} confidence · you can change it below</span>
+      </div>
+      <ng-template #unknown>
+        <div><b>We couldn't tell what this is</b><span>Pick the right category below.</span></div>
+      </ng-template>
+    </div>
+
+    <label class="lbl">Name</label>
+    <label class="z-pill-input"><input [(ngModel)]="title" placeholder="Document name" /></label>
+
+    <label class="lbl">Category</label>
+    <div class="cats">
+      <button type="button" *ngFor="let c of categories" [class.on]="categoryId === c.id" (click)="categoryId = c.id"
+              [style.--c]="c.color" [style.--bg]="c.bg">
+        <ion-icon [name]="c.icon"></ion-icon><span>{{ c.label }}</span>
+      </button>
+    </div>
+
+    <label class="lbl">Details <small>(optional)</small></label>
+    <label class="z-pill-input"><ion-icon name="id-card-outline"></ion-icon><input [(ngModel)]="number" placeholder="ID / document number" /></label>
+    <label class="z-pill-input" style="margin-top:10px"><ion-icon name="calendar-outline"></ion-icon><input type="date" [(ngModel)]="expiry" aria-label="Expiry date" /></label>
+    <p class="hint">Add an expiry date and we'll warn you before it lapses.</p>
+
+    <ion-button expand="block" class="z-btn" [disabled]="saving" (click)="save()">Save to {{ cat.label }}</ion-button>
+    <div class="links"><button type="button" (click)="later()">Review later</button><button type="button" class="red" (click)="discard()">Discard</button></div>
+  </div>
+
+  <ng-template #notready>
+    <div class="z-wrap" *ngIf="missing">
+      <div class="z-card z-empty"><ion-icon name="alert-circle-outline"></ion-icon><h3>Document not found</h3>
+        <ion-button class="z-btn" routerLink="/app/vault">Back to vault</ion-button></div>
+    </div>
+  </ng-template>
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap" *ngIf="vm$ | async as vm">
+    <h1 class="z-title z-rise">Alerts</h1>
+    <p class="z-sub z-rise">Documents that are expired or expiring in the next 60 days.</p>
+
+    <div class="z-card all-good z-rise" *ngIf="!vm.expired.length && !vm.soon.length">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <div>
+        <b>You're all clear</b>
+        <span *ngIf="vm.total; else none">Nothing is expiring soon. {{ vm.ok }} {{ vm.ok === 1 ? 'document is' : 'documents are' }} tracked.</span>
+        <ng-template #none>Add documents with expiry dates and we'll warn you before they lapse.</ng-template>
+      </div>
+    </div>
+
+    <section class="z-section" *ngIf="vm.expired.length">
+      <div class="z-section-head"><h2>Expired</h2><span class="z-chip expired">{{ vm.expired.length }}</span></div>
+      <app-doc-row *ngFor="let d of vm.expired" [doc]="d"></app-doc-row>
+    </section>
+
+    <section class="z-section" *ngIf="vm.soon.length">
+      <div class="z-section-head"><h2>Expiring soon</h2><span class="z-chip soon">{{ vm.soon.length }}</span></div>
+      <app-doc-row *ngFor="let d of vm.soon" [doc]="d"></app-doc-row>
+    </section>
+
+    <div class="tip z-card" *ngIf="vm.noDate">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <span>{{ vm.noDate }} {{ vm.noDate === 1 ? 'document has' : 'documents have' }} no expiry date. Open one and add it to get alerts.</span>
+    </div>
+    <p class="soon-note"><ion-icon name="notifications-outline"></ion-icon> Push reminders are coming soon.</p>
+  </div>
+</ion-content>

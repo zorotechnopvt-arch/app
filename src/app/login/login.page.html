@@ -1,0 +1,184 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="bg-wave top" aria-hidden="true">
+    <svg viewBox="0 0 400 260" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="waveA" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffb27a" stop-opacity=".55" />
+          <stop offset="1" stop-color="#ffe3cf" stop-opacity=".1" />
+        </linearGradient>
+        <linearGradient id="waveB" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff9a4d" stop-opacity=".6" />
+          <stop offset="1" stop-color="#ffd9bd" stop-opacity=".05" />
+        </linearGradient>
+      </defs>
+      <path class="w1" d="M0 0H400V190C350 215 300 130 230 120C160 110 120 170 60 140C30 125 10 90 0 80Z" fill="url(#waveA)" />
+      <path class="w2" d="M120 0H400V120C360 150 330 80 270 70C210 60 180 30 120 0Z" fill="url(#waveB)" />
+    </svg>
+  </div>
+
+  <div class="bg-wave bottom" aria-hidden="true">
+    <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="waveC" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#ffd9bd" stop-opacity=".7" />
+          <stop offset="1" stop-color="#ffc59b" stop-opacity=".45" />
+        </linearGradient>
+      </defs>
+      <path class="w3" d="M0 60C70 20 140 30 210 60C280 90 340 80 400 40V120H0Z" fill="url(#waveC)" />
+      <path class="w4" d="M0 90C80 60 150 75 220 95C290 115 350 100 400 75V120H0Z" fill="#ffe9d9" opacity=".9" />
+    </svg>
+  </div>
+
+  <div class="login-wrap">
+    <!-- Brand -->
+    <header class="brand">
+      <div class="logo">
+        <span>Z</span>
+        <svg class="logo-o" viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" fill="none" stroke="#ff6a13" stroke-width="7" />
+          <rect x="15" y="22" width="18" height="13" rx="3" fill="#ff6a13" />
+          <path d="M18.5 22v-3.5a5.5 5.5 0 0 1 11 0V22" fill="none" stroke="#ff6a13" stroke-width="3" />
+          <circle cx="24" cy="28" r="2" fill="#fff" />
+        </svg>
+        <span>RO</span>
+      </div>
+      <p class="tagline">Your Data. Your <b>Control.</b></p>
+    </header>
+
+    <!-- Shield hero -->
+    <div class="hero" aria-hidden="true">
+      <svg viewBox="0 0 300 200">
+        <defs>
+          <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffa75a" />
+            <stop offset="1" stop-color="#f06a10" />
+          </linearGradient>
+          <linearGradient id="shieldRim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffd2a8" />
+            <stop offset="1" stop-color="#f7a35f" />
+          </linearGradient>
+          <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#ffb27a" stop-opacity=".55" />
+            <stop offset="1" stop-color="#ffb27a" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset=".5" stop-color="#fff" stop-opacity=".55" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <clipPath id="shieldClip">
+            <path d="M150 28l48 17v42c0 31-20 53-48 66-28-13-48-35-48-66V45z" />
+          </clipPath>
+        </defs>
+
+        <!-- soft glow + ground shadow -->
+        <circle class="glow" cx="150" cy="100" r="78" fill="url(#glow)" />
+        <ellipse class="ground" cx="150" cy="172" rx="52" ry="8" fill="#f9b98a" opacity=".45" />
+
+        <!-- orbit ring: back half -->
+        <g transform="rotate(-14 150 104)">
+          <path class="orbit-back" d="M18 104A132 32 0 0 1 282 104" fill="none" stroke="#ffb98a" stroke-width="1.3" />
+        </g>
+
+        <!-- orbit ring 2 (mirrored): back half -->
+        <g transform="rotate(14 150 104)">
+          <path class="orbit-back rev" d="M18 104A132 32 0 0 1 282 104" fill="none" stroke="#ffb98a" stroke-width="1.3" />
+        </g>
+
+        <!-- floating shield -->
+        <g class="shield-float">
+          <path d="M150 28l48 17v42c0 31-20 53-48 66-28-13-48-35-48-66V45z" fill="url(#shieldRim)" />
+          <path d="M150 35l41 14.5v37.5c0 27-17 46-41 57.5-24-11.5-41-30.5-41-57.5V49.5z" fill="url(#shield)" />
+          <path d="M150 35l41 14.5v37.5c0 27-17 46-41 57.5z" fill="#fff" opacity=".1" />
+          <g clip-path="url(#shieldClip)">
+            <rect class="shine" x="-60" y="20" width="50" height="150" fill="url(#shine)" transform="skewX(-18)" />
+          </g>
+          <g class="lock">
+            <path class="shackle" d="M139 91V84a11 11 0 0 1 22 0v18" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" />
+            <rect x="130" y="91" width="40" height="32" rx="7" fill="#fff" />
+            <circle cx="150" cy="104" r="4.5" fill="#f26a0f" />
+            <rect x="148" y="106" width="4" height="10" rx="2" fill="#f26a0f" />
+          </g>
+        </g>
+
+        <!-- orbit ring: front half + travelling dot -->
+        <g transform="rotate(-14 150 104)">
+          <path class="orbit-front" d="M282 104A132 32 0 0 1 18 104" fill="none" stroke="#ffb98a" stroke-width="1.3" />
+          <circle r="3.500" fill="#ff7a21">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M18 104A132 32 0 0 1 282 104A132 32 0 0 1 18 104" />
+          </circle>
+        </g>
+
+        <!-- orbit ring 2 (mirrored): front half + dot travelling the other way -->
+        <g transform="rotate(14 150 104)">
+          <path class="orbit-front rev" d="M282 104A132 32 0 0 1 18 104" fill="none" stroke="#ffb98a" stroke-width="1.3" />
+          <circle r="3.5" fill="#ff7a21">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M282 104A132 32 0 0 0 18 104A132 32 0 0 0 282 104" />
+          </circle>
+        </g>
+
+        <!-- particles -->
+        <rect class="sp sp1" x="48" y="62" width="9" height="9" rx="2" fill="#ff8a3d" />
+        <rect class="sp sp2" x="246" y="140" width="9" height="9" rx="2" fill="#ff8a3d" />
+        <circle class="sp sp3" cx="70" cy="132" r="2.500" fill="#ffb27a" />
+        <circle class="sp sp4" cx="92" cy="40" r="2" fill="#ffb27a" />
+        <circle class="sp sp5" cx="232" cy="52" r="2.500" fill="#ffb27a" />
+        <circle class="sp sp6" cx="262" cy="86" r="2" fill="#ffb27a" />
+        <circle class="sp sp7" cx="40" cy="104" r="1.800" fill="#ffb27a" />
+      </svg>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="signIn()" novalidate class="form">
+      <div class="field" [class.invalid]="form.controls.email.touched && form.controls.email.invalid">
+        <ion-icon name="mail-outline"></ion-icon>
+        <ion-input
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          placeholder="Email address"
+          formControlName="email"
+        ></ion-input>
+      </div>
+
+      <div class="field" [class.invalid]="form.controls.password.touched && form.controls.password.invalid">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <ion-input
+          [type]="showPassword ? 'text' : 'password'"
+          autocomplete="current-password"
+          placeholder="Password"
+          formControlName="password"
+        ></ion-input>
+        <button type="button" class="eye" (click)="togglePassword()" aria-label="Toggle password visibility">
+          <ion-icon [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+        </button>
+      </div>
+
+      <div class="row">
+        <ion-checkbox formControlName="remember" labelPlacement="end" justify="start">Remember me</ion-checkbox>
+        <a class="link" (click)="forgotPassword()">Forgot password?</a>
+      </div>
+
+      <ion-button expand="block" type="submit" class="btn-primary" [disabled]="loading">
+        <ng-container *ngIf="!loading; else spin">
+          Sign In <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+        </ng-container>
+        <ng-template #spin><ion-spinner name="crescent"></ion-spinner></ng-template>
+      </ion-button>
+    </form>
+
+    <div class="divider"><span>or</span></div>
+
+    <ion-button expand="block" fill="outline" class="btn-google" [disabled]="googleLoading" (click)="signInWithGoogle()">
+      <svg slot="start" viewBox="0 0 48 48" width="22" height="22" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
+        <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.1z" />
+        <path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6z" />
+        <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z" />
+      </svg>
+      Continue with Google
+    </ion-button>
+
+    <p class="signup">Don't have an account? <a class="link" (click)="signUp()">Sign up</a></p>
+  </div>
+</ion-content>

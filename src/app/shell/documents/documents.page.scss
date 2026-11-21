@@ -1,0 +1,10 @@
+.clear { background: none; border: 0; padding: 0; display: flex; ion-icon { font-size: 20px; } }
+.chips {
+  display: flex; gap: 8px; overflow-x: auto; margin: 14px -20px 16px; padding: 2px 20px; scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+  button {
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--zoro-border); background: #fff;
+    font: inherit; font-size: 13px; font-weight: 600; color: #4b5563; transition: all .15s;
+    &.on { background: var(--zoro-orange); border-color: var(--zoro-orange); color: #fff; box-shadow: 0 4px 10px rgba(255, 106, 19, .3); }
+  }
+}

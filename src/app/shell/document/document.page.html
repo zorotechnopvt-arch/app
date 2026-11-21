@@ -1,0 +1,53 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap" *ngIf="vm$ | async as vm; else missing">
+    <div class="bar">
+      <button class="z-back" type="button" [routerLink]="['/app/category', vm.cat.id]" aria-label="Back"><ion-icon name="chevron-back"></ion-icon></button>
+      <div class="actions">
+        <button class="z-back" type="button" (click)="share(vm.doc)" aria-label="Share"><ion-icon name="share-outline"></ion-icon></button>
+        <button class="z-back" type="button" (click)="download(vm.doc)" aria-label="Download"><ion-icon name="download-outline"></ion-icon></button>
+        <button class="z-back danger" type="button" (click)="remove(vm.doc)" aria-label="Delete"><ion-icon name="trash-outline"></ion-icon></button>
+      </div>
+    </div>
+
+    <a class="review z-rise" *ngIf="!vm.doc.reviewed" [routerLink]="['/app/review', vm.doc.id]">
+      <ion-icon name="sparkles-outline"></ion-icon><span>Filed automatically – tap to confirm</span><ion-icon name="chevron-forward"></ion-icon>
+    </a>
+
+    <div class="preview z-card z-rise">
+      <img *ngIf="vm.isImage; else file" [src]="vm.url" alt="" />
+      <ng-template #file>
+        <div class="file">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <b>{{ vm.doc.mime === 'application/pdf' ? 'PDF document' : 'File' }}</b>
+          <ion-button class="z-btn" size="small" (click)="openFile(vm.doc)"><ion-icon slot="start" name="open-outline"></ion-icon>Open</ion-button>
+        </div>
+      </ng-template>
+    </div>
+
+    <input class="title" [value]="vm.doc.title" (change)="rename(vm.doc, $event)" aria-label="Title" />
+
+    <button class="catpill" type="button" (click)="changeCategory(vm.doc)" [style.background]="vm.cat.bg" [style.color]="vm.cat.color">
+      <ion-icon [name]="vm.cat.icon"></ion-icon>{{ vm.cat.label }}<ion-icon name="create-outline" class="edit"></ion-icon>
+    </button>
+
+    <div class="z-card info">
+      <label class="field">
+        <span>ID / number</span>
+        <input [value]="vm.doc.fields.number || ''" (change)="updateField(vm.doc, 'number', $event)" placeholder="Add a number" />
+      </label>
+      <label class="field">
+        <span>Expiry date <em *ngIf="vm.exp" class="z-chip" [ngClass]="vm.exp.state">{{ vm.exp.label }}</em></span>
+        <input type="date" [value]="vm.doc.fields.expiry || ''" (change)="updateField(vm.doc, 'expiry', $event)" />
+      </label>
+      <div class="field ro"><span>Added</span><b>{{ vm.doc.createdAt | date: 'd MMM y, h:mm a' }}</b></div>
+      <div class="field ro"><span>Size</span><b>{{ size(vm.doc.size) }}</b></div>
+    </div>
+  </div>
+
+  <ng-template #missing>
+    <div class="z-wrap" *ngIf="ready">
+      <div class="z-card z-empty"><ion-icon name="alert-circle-outline"></ion-icon><h3>Document not found</h3>
+        <ion-button class="z-btn" routerLink="/app/vault">Back to vault</ion-button></div>
+    </div>
+  </ng-template>
+</ion-content>

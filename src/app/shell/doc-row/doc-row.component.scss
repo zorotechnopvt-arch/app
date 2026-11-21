@@ -1,0 +1,18 @@
+:host { display: block; }
+.row {
+  display: flex; align-items: center; gap: 14px; padding: 12px; margin-bottom: 10px; text-decoration: none; color: inherit;
+  background: #fff; border: 1px solid var(--zoro-border); border-radius: 18px; box-shadow: var(--zoro-shadow);
+  transition: transform .15s; &:active { transform: scale(.985); }
+}
+.thumb {
+  width: 54px; height: 54px; border-radius: 14px; overflow: hidden; flex-shrink: 0; display: grid; place-items: center;
+  img { width: 100%; height: 100%; object-fit: cover; }
+  ion-icon { font-size: 26px; }
+}
+.info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;
+  b { font-size: 15px; font-weight: 700; color: var(--zoro-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .meta { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--zoro-muted); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+}
+.go { color: #c0c4cc; font-size: 18px; flex-shrink: 0; }

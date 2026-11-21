@@ -1,0 +1,28 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap">
+    <h1 class="z-title z-rise">Documents</h1>
+    <p class="z-sub z-rise">Search by name, category, number or text inside.</p>
+
+    <label class="z-pill-input z-rise" style="margin-top:16px;animation-delay:.05s">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="search" placeholder="Search documents" [ngModel]="query" (ngModelChange)="onQuery($event)" />
+      <button *ngIf="query" type="button" class="clear" (click)="onQuery('')" aria-label="Clear"><ion-icon name="close-outline"></ion-icon></button>
+    </label>
+
+    <div class="chips">
+      <button type="button" [class.on]="filter === 'all'" (click)="setFilter('all')">All</button>
+      <button type="button" [class.on]="filter === 'review'" (click)="setFilter('review')">Needs review</button>
+      <button type="button" *ngFor="let c of categories" [class.on]="filter === c.id" (click)="setFilter(c.id)">{{ c.label }}</button>
+    </div>
+
+    <ng-container *ngIf="list$ | async as list">
+      <app-doc-row *ngFor="let d of list" [doc]="d"></app-doc-row>
+      <div class="z-card z-empty" *ngIf="!list.length">
+        <ion-icon name="documents-outline"></ion-icon>
+        <h3>{{ query || filter !== 'all' ? 'No matching documents' : 'No documents yet' }}</h3>
+        <p>{{ query || filter !== 'all' ? 'Try a different search or filter.' : 'Scan or upload your first document.' }}</p>
+        <ion-button *ngIf="!query && filter === 'all'" class="z-btn" (click)="add()">Add a document</ion-button>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>

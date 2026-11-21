@@ -1,0 +1,43 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap" *ngIf="vm$ | async as vm">
+    <button class="z-back" type="button" routerLink="/app/vault" aria-label="Back"><ion-icon name="chevron-back"></ion-icon></button>
+
+    <header class="head z-rise">
+      <span class="ico" [style.background]="vm.cat.bg"><ion-icon [name]="vm.cat.icon" [style.color]="vm.cat.color"></ion-icon></span>
+      <div>
+        <h1 class="z-title">{{ vm.cat.label }}</h1>
+        <p class="z-sub">{{ vm.list.length }} {{ vm.list.length === 1 ? 'document' : 'documents' }} · {{ vm.cat.hint }}</p>
+      </div>
+    </header>
+
+    <div class="table z-card z-rise" role="table" *ngIf="vm.list.length" style="animation-delay:.05s">
+      <div class="tr th" role="row">
+        <span role="columnheader">Date</span>
+        <span role="columnheader">{{ vm.cat.id === 'health' ? 'Report name' : 'Document name' }}</span>
+        <span role="columnheader" class="c">View</span>
+      </div>
+      <div class="tr" role="row" *ngFor="let d of vm.list" [routerLink]="['/app/document', d.id]">
+        <span class="date" role="cell">{{ d.createdAt | date: 'd MMM y' }}</span>
+        <span class="name" role="cell">
+          <b>{{ d.title }}</b>
+          <span class="chips" *ngIf="!d.reviewed || exp(d)">
+            <span class="z-chip review" *ngIf="!d.reviewed">Needs review</span>
+            <span class="z-chip" *ngIf="exp(d)" [ngClass]="exp(d)!.state">{{ exp(d)!.label }}</span>
+          </span>
+        </span>
+        <span class="c" role="cell">
+          <a class="view" [routerLink]="['/app/document', d.id]" (click)="$event.stopPropagation()" [attr.aria-label]="'View ' + d.title">
+            <ion-icon name="eye-outline"></ion-icon>View
+          </a>
+        </span>
+      </div>
+    </div>
+
+    <div class="z-card z-empty" *ngIf="!vm.list.length">
+      <ion-icon [name]="vm.cat.icon" [style.color]="vm.cat.color"></ion-icon>
+      <h3>Nothing in {{ vm.cat.label }} yet</h3>
+      <p>Scan or upload a document and it will be filed here when it matches.</p>
+      <ion-button class="z-btn" (click)="add()">Add a document</ion-button>
+    </div>
+  </div>
+</ion-content>

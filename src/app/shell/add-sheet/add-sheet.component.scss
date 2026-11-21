@@ -1,0 +1,19 @@
+:host { display: block; font-family: var(--zoro-font); }
+.sheet { padding: 22px 20px calc(env(safe-area-inset-bottom) + 18px); }
+h2 { margin: 0; font-size: 22px; font-weight: 800; color: var(--zoro-text); }
+p { margin: 4px 0 18px; color: var(--zoro-muted); font-size: 14px; }
+
+.tile {
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 16px; margin-bottom: 12px;
+  background: #fff; border: 1px solid var(--zoro-border); border-radius: 18px; box-shadow: var(--zoro-shadow);
+  cursor: pointer; transition: transform .15s, border-color .15s;
+  &:active { transform: scale(.98); border-color: var(--zoro-orange); }
+  input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 0; }
+  .ico {
+    width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; flex-shrink: 0;
+    background: linear-gradient(135deg, #ff8a3d, #ff6a13); color: #fff; ion-icon { font-size: 24px; }
+  }
+  .txt { flex: 1; display: flex; flex-direction: column; b { font-size: 16px; color: var(--zoro-text); } small { color: var(--zoro-muted); font-size: 13px; margin-top: 2px; } }
+  .go { color: #c0c4cc; font-size: 18px; }
+}
+.note { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 6px 0 0; font-size: 12px; ion-icon { font-size: 14px; } }

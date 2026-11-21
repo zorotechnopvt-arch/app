@@ -1,0 +1,176 @@
+<ion-content class="z-page consent" [fullscreen]="true">
+
+  <ng-container *ngIf="state() === 'review'">
+
+    <!-- ===== A REQUEST IS WAITING ===== -->
+    <ng-container *ngIf="req() as r; else none">
+      <header class="hero">
+        <span class="orb o1"></span><span class="orb o2"></span>
+        <button class="back" type="button" routerLink="/app/vault" aria-label="Back"><ion-icon name="chevron-back"></ion-icon></button>
+        <p class="eyebrow"><span class="live"></span>New consent request</p>
+        <div class="who">
+          <span class="avatar"><ion-icon name="business-outline"></ion-icon></span>
+          <div>
+            <h1>{{ r.hospital }}</h1>
+            <p>is requesting access to your health reports</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="sheet">
+        <!-- request facts -->
+        <section class="facts z-card rise">
+          <div class="cell"><small>Department</small><b>{{ r.department }}</b></div>
+          <div class="cell"><small>Request ID</small><b class="mono">{{ r.requestId }}</b></div>
+          <div class="cell wide"><small>Purpose</small><b>{{ r.purpose }}</b></div>
+        </section>
+
+        <!-- reports -->
+        <section class="block rise" style="animation-delay:.06s">
+          <div class="block-head">
+            <div><h2>Choose reports to share</h2><p>Only the ones you tick will be visible.</p></div>
+            <button type="button" class="pill" (click)="toggleAll()">{{ allSelected() ? 'Clear' : 'Select all' }}</button>
+          </div>
+
+          <button type="button" class="rep" *ngFor="let rec of records" [class.on]="isSelected(rec.id)" (click)="toggle(rec.id)" [attr.aria-pressed]="isSelected(rec.id)">
+            <span class="thumb" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="meta">
+              <b>{{ rec.title }}</b>
+              <small>{{ rec.facility }} · {{ rec.date | date: 'd MMM y' }}</small>
+              <span class="tags"><span class="z-chip">{{ rec.type }}</span><span class="z-chip">PDF</span></span>
+            </span>
+            <span class="tick"><ion-icon name="checkmark"></ion-icon></span>
+          </button>
+        </section>
+
+        <!-- duration -->
+        <section class="block rise" style="animation-delay:.12s">
+          <div class="block-head"><div><h2>How long can they view?</h2><p>Access switches off by itself.</p></div></div>
+          <div class="seg" [style.--i]="durIndex()">
+            <span class="knob" aria-hidden="true"></span>
+            <button type="button" *ngFor="let d of durations" [class.on]="duration() === d.id" (click)="duration.set(d.id)">{{ d.label }}</button>
+          </div>
+          <div class="timeline">
+            <div class="tl-pt"><span class="dot now"></span><small>Today</small></div>
+            <span class="tl-line"></span>
+            <div class="tl-pt end"><span class="dot"></span><small>{{ expires() | date: 'd MMM, h:mm a' }}</small></div>
+          </div>
+        </section>
+
+        <!-- what they can / can't do -->
+        <section class="cancant rise" style="animation-delay:.18s">
+          <div class="col yes">
+            <h3><ion-icon name="checkmark"></ion-icon> Can</h3>
+            <ul><li>View the selected reports</li><li>See report dates</li></ul>
+          </div>
+          <div class="col no">
+            <h3><ion-icon name="close-outline"></ion-icon> Can't</h3>
+            <ul><li>See your other documents</li><li>Pass them to anyone else</li></ul>
+          </div>
+        </section>
+        <p class="revoke-note rise" style="animation-delay:.22s"><ion-icon name="lock-closed-outline"></ion-icon> You can revoke access at any time.</p>
+
+        <ng-container *ngTemplateOutlet="historyTpl"></ng-container>
+        <button type="button" class="demo-link" (click)="raise()">Demo: raise another request</button>
+      </div>
+    </ng-container>
+
+    <!-- ===== NOTHING WAITING ===== -->
+    <ng-template #none>
+      <div class="sheet calm">
+        <button class="z-back" type="button" routerLink="/app/vault" aria-label="Back"><ion-icon name="chevron-back"></ion-icon></button>
+        <div class="calm-card rise">
+          <div class="calm-ico"><ion-icon name="shield-checkmark-outline"></ion-icon></div>
+          <h1>No requests waiting</h1>
+          <p>When a hospital asks to see your reports, it will show up here and on your home screen with a red dot.</p>
+          <ion-button class="z-btn" (click)="raise()"><ion-icon slot="start" name="business-outline"></ion-icon>Simulate a request from Apollo</ion-button>
+          <small>Demo only. In the real app the hospital sends this.</small>
+        </div>
+        <ng-container *ngTemplateOutlet="historyTpl"></ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <!-- shared: consent history -->
+  <ng-template #historyTpl>
+    <section class="hist" *ngIf="history().length">
+      <button type="button" class="hist-head" (click)="toggleHistory()" [attr.aria-expanded]="historyOpen()">
+        <span>Your consents</span><span class="n">{{ history().length }}</span>
+        <ion-icon name="chevron-forward" [class.open]="historyOpen()"></ion-icon>
+      </button>
+      <div class="hist-body" [class.open]="historyOpen()">
+        <div class="inner">
+          <div class="h-row" *ngFor="let c of history()">
+            <div class="h-info">
+              <b>{{ c.hospital }}</b>
+              <small *ngIf="c.status !== 'denied'">{{ c.recordIds.length }} {{ c.recordIds.length === 1 ? 'report' : 'reports' }} · {{ svc.statusOf(c) === 'Active' ? 'until ' + (c.expiresAt | date: 'd MMM, h:mm a') : (c.createdAt | date: 'd MMM y') }}</small>
+              <small *ngIf="c.status === 'denied'">Declined · {{ c.createdAt | date: 'd MMM y' }}</small>
+            </div>
+            <span class="z-chip" [ngClass]="{ ok: svc.statusOf(c) === 'Active', expired: svc.statusOf(c) === 'Denied' || svc.statusOf(c) === 'Revoked' }">{{ svc.statusOf(c) }}</span>
+            <button type="button" class="rev" *ngIf="svc.statusOf(c) === 'Active'" (click)="svc.revoke(c.id)">Revoke</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-template>
+
+  <!-- ===== APPROVED ===== -->
+  <div class="done-wrap" *ngIf="state() === 'done' && last() as c">
+    <div class="done rise">
+      <div class="burst-wrap">
+        <span class="spark" *ngFor="let a of burst" [style.--a]="a + 'deg'" [class.off]="!lastActive()"></span>
+        <div class="badge" [class.off]="!lastActive()">
+          <svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-17" fill="none" /></svg>
+        </div>
+      </div>
+      <h1>{{ lastActive() ? 'Consent approved' : 'Access revoked' }}</h1>
+      <p class="sub" *ngIf="lastActive(); else gone">{{ c.hospital }} can view {{ c.recordIds.length === 1 ? 'the report' : 'these ' + c.recordIds.length + ' reports' }} until <b>{{ c.expiresAt | date: 'd MMM, h:mm a' }}</b>.</p>
+      <ng-template #gone><p class="sub">{{ c.hospital }} can no longer view these reports.</p></ng-template>
+
+      <div class="ticket">
+        <div class="t-top">
+          <small>Shared with</small>
+          <b>{{ c.hospital }}</b>
+          <div class="t-files"><span *ngFor="let id of c.recordIds"><ion-icon name="document-text-outline"></ion-icon>{{ svc.titleOf(id) }}</span></div>
+        </div>
+        <div class="t-cut" aria-hidden="true"></div>
+        <div class="t-bottom">
+          <div><small>Consent ID</small><b class="mono">{{ c.id }}</b></div>
+          <div><small>Purpose</small><b>{{ c.purpose }}</b></div>
+          <div><small>Approved</small><b>{{ c.createdAt | date: 'd MMM y, h:mm a' }}</b></div>
+          <div><small>Status</small><b [class.g]="lastActive()">{{ lastActive() ? 'Active' : 'Revoked' }}</b></div>
+        </div>
+      </div>
+
+      <ion-button expand="block" class="z-btn" (click)="done()">Done</ion-button>
+      <button type="button" class="link red" *ngIf="lastActive()" (click)="revokeLast()">Revoke access</button>
+    </div>
+  </div>
+
+  <!-- ===== DECLINED ===== -->
+  <div class="done-wrap" *ngIf="state() === 'denied' && last() as c">
+    <div class="done rise">
+      <div class="burst-wrap"><div class="badge denied"><ion-icon name="close-outline"></ion-icon></div></div>
+      <h1>Request declined</h1>
+      <p class="sub">{{ c.hospital }} has not been given access to any of your reports.</p>
+      <ion-button expand="block" class="z-btn" (click)="done()">Done</ion-button>
+      <button type="button" class="link" (click)="undoDeny()">Changed your mind? Review again</button>
+    </div>
+  </div>
+</ion-content>
+
+<!-- ===== ACTION BAR ===== -->
+<ion-footer *ngIf="state() === 'review' && req()" class="bar" [translucent]="false">
+  <div class="bar-in">
+    <div class="row">
+      <div class="sum">
+        <b>{{ count() ? count() + (count() === 1 ? ' report' : ' reports') : 'Nothing selected' }}</b>
+        <small>{{ count() ? 'for ' + durLabel() : 'Tick a report above' }}</small>
+      </div>
+      <ion-button class="z-btn ok" [disabled]="!count()" (click)="approve()">
+        Approve <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+    <button type="button" class="deny" (click)="deny()">Deny request</button>
+  </div>
+</ion-footer>

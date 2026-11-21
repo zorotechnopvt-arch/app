@@ -1,0 +1,17 @@
+<a class="row" [routerLink]="['/app/document', doc.id]">
+  <span class="thumb" [style.background]="cat.bg">
+    <img *ngIf="isImage; else icon" [src]="docs.previewUrl(doc)" alt="" />
+    <ng-template #icon><ion-icon [name]="doc.mime === 'application/pdf' ? 'document-text-outline' : cat.icon" [style.color]="cat.color"></ion-icon></ng-template>
+  </span>
+  <span class="info">
+    <b>{{ doc.title }}</b>
+    <span class="meta">
+      <span class="dot" [style.background]="cat.color"></span>{{ cat.label }} · {{ doc.createdAt | date: 'd MMM y' }}
+    </span>
+    <span class="chips" *ngIf="!doc.reviewed || exp">
+      <span class="z-chip review" *ngIf="!doc.reviewed">Needs review</span>
+      <span class="z-chip" *ngIf="exp" [ngClass]="exp.state">{{ exp.label }}</span>
+    </span>
+  </span>
+  <ion-icon class="go" name="chevron-forward"></ion-icon>
+</a>

@@ -1,0 +1,115 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* Dark palette disabled: design is light-only */
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+
+/* ===== Zoro vault design tokens & shared pieces ===== */
+:root {
+  --zoro-orange: #ff6a13;
+  --zoro-orange-light: #ff8a3d;
+  --zoro-text: #111827;
+  --zoro-muted: #6b7280;
+  --zoro-border: #e8e8ec;
+  --zoro-surface: #ffffff;
+  --zoro-bg: linear-gradient(180deg, #fff1e6 0%, #fff8f3 38%, #ffffff 100%);
+  --zoro-shadow: 0 4px 18px rgba(17, 24, 39, 0.06);
+  --zoro-font: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.z-page { --background: var(--zoro-bg); font-family: var(--zoro-font); color: var(--zoro-text); }
+.z-wrap {
+  position: relative; max-width: 520px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 18px) 20px 120px;
+}
+.z-bg-wave {
+  position: absolute; top: 0; left: 0; width: 100%; height: 220px; pointer-events: none;
+  svg { width: 100%; height: 100%; display: block; }
+}
+.z-title { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.3px; }
+.z-sub { margin: 4px 0 0; font-size: 14px; color: var(--zoro-muted); }
+.z-section { margin-top: 26px; }
+.z-section-head {
+  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;
+  h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  a, button { font-size: 13px; font-weight: 600; color: var(--zoro-orange); background: none; border: 0; padding: 0; text-decoration: none; }
+}
+.z-card { background: var(--zoro-surface); border: 1px solid var(--zoro-border); border-radius: 20px; box-shadow: var(--zoro-shadow); }
+.z-pill-input {
+  display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 16px;
+  background: #fff; border: 1px solid var(--zoro-border); border-radius: 999px; box-shadow: var(--zoro-shadow);
+  ion-icon { font-size: 20px; color: var(--zoro-muted); flex-shrink: 0; }
+  input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 16px; color: var(--zoro-text); }
+  &:focus-within { border-color: var(--zoro-orange); box-shadow: 0 0 0 3px rgba(255, 106, 19, .15); }
+}
+.z-btn {
+  --background: linear-gradient(90deg, #ff6a13, #ff8a3d);
+  --border-radius: 999px; --box-shadow: 0 8px 18px rgba(255, 106, 19, .3);
+  height: 52px; margin: 0; font-size: 16px; font-weight: 600; text-transform: none;
+}
+.z-btn-ghost {
+  --background: #fff; --color: var(--zoro-text); --border-color: var(--zoro-border); --border-width: 1px;
+  --border-radius: 999px; --box-shadow: none; height: 52px; margin: 0; font-size: 16px; font-weight: 600; text-transform: none;
+}
+.z-chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; background: #f1f2f4; color: #4b5563; white-space: nowrap;
+  &.ok { background: #e4f8ea; color: #15803d; }
+  &.soon { background: #fff3dc; color: #b45309; }
+  &.expired { background: #ffebeb; color: #b91c1c; }
+  &.review { background: #fff1e6; color: #c2410c; }
+}
+.z-empty {
+  text-align: center; padding: 36px 24px; color: var(--zoro-muted);
+  ion-icon { font-size: 44px; color: #ffb27a; }
+  h3 { margin: 10px 0 4px; color: var(--zoro-text); font-size: 17px; }
+  p { margin: 0 0 16px; font-size: 14px; }
+}
+.z-back {
+  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+  border-radius: 50%; border: 1px solid var(--zoro-border); background: #fff; box-shadow: var(--zoro-shadow);
+  color: var(--zoro-text); font-size: 20px; padding: 0;
+}
+@keyframes z-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.z-rise { animation: z-rise .5s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .z-rise { animation: none; } }
+
+ion-modal.add-sheet { --border-radius: 28px 28px 0 0; }
+ion-loading.zoro-loading { --spinner-color: var(--zoro-orange); font-family: var(--zoro-font); }
+
+ion-modal.pdf-modal { --width: min(760px, 100%); --height: 94%; --border-radius: 22px; --box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+@media (max-width: 600px) { ion-modal.pdf-modal { --height: 100%; --border-radius: 0; } }

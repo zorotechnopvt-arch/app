@@ -1,0 +1,21 @@
+<div class="viewer">
+  <header class="bar">
+    <button class="icon-btn" type="button" (click)="close()" aria-label="Close"><ion-icon name="close-outline"></ion-icon></button>
+    <div class="ttl">
+      <b>{{ record.title }}</b>
+      <span>{{ record.facility }} · {{ record.date | date: 'd MMM y' }}<ng-container *ngIf="pageCount()"> · {{ pageCount() }} {{ pageCount() === 1 ? 'page' : 'pages' }}</ng-container></span>
+    </div>
+    <button class="dl" type="button" (click)="download()"><ion-icon name="download-outline"></ion-icon>Download</button>
+  </header>
+
+  <div class="body">
+    <div class="state" *ngIf="loading()"><ion-spinner name="crescent"></ion-spinner><span>Opening report…</span></div>
+    <div class="state err" *ngIf="error()">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <b>Couldn't open this report</b>
+      <span>You can still download it.</span>
+      <ion-button class="z-btn" size="small" (click)="download()">Download</ion-button>
+    </div>
+    <div #pages class="pages"></div>
+  </div>
+</div>

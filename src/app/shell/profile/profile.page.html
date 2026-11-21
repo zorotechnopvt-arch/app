@@ -1,0 +1,29 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-wrap">
+    <div class="me z-rise">
+      <div class="avatar-wrap">
+        <span class="ring"></span>
+        <img *ngIf="user?.picture; else ini" [src]="user.picture" alt="" referrerpolicy="no-referrer" />
+        <ng-template #ini><div class="ini">{{ user?.name?.charAt(0) || '?' }}</div></ng-template>
+      </div>
+      <h1 class="z-title">{{ user?.name }}</h1>
+      <p class="z-sub">{{ user?.email }}</p>
+    </div>
+
+    <div class="stats z-card z-rise" *ngIf="stats$ | async as s" style="animation-delay:.08s">
+      <div><b>{{ s.count }}</b><span>Documents</span></div>
+      <div><b>{{ s.cats }}</b><span>Categories</span></div>
+      <div><b>{{ s.mb < 0.1 ? '<0.1' : (s.mb | number: '1.1-1') }}</b><span>MB used</span></div>
+    </div>
+
+    <div class="list z-card z-rise" style="animation-delay:.14s">
+      <div class="item off"><ion-icon name="finger-print-outline"></ion-icon><span>App lock (Face ID)</span><em>Soon</em></div>
+      <div class="item off"><ion-icon name="notifications-outline"></ion-icon><span>Expiry reminders</span><em>Soon</em></div>
+      <div class="item off"><ion-icon name="cloud-outline"></ion-icon><span>Cloud backup</span><em>Soon</em></div>
+    </div>
+
+    <p class="priv"><ion-icon name="lock-closed-outline"></ion-icon> Your documents are stored privately on this device.</p>
+
+    <ion-button expand="block" class="z-btn-ghost out" (click)="signOut()"><ion-icon slot="start" name="log-out-outline"></ion-icon>Sign out</ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,27 @@
+<div class="sheet">
+  <h2>Add a document</h2>
+  <p>We'll read it and file it in the right place.</p>
+
+  <label class="tile">
+    <span class="ico"><ion-icon name="camera-outline"></ion-icon></span>
+    <span class="txt"><b>Scan with camera</b><small>Take a photo of your document</small></span>
+    <ion-icon class="go" name="chevron-forward"></ion-icon>
+    <input type="file" accept="image/*" capture="environment" (change)="pick($event)" />
+  </label>
+
+  <label class="tile">
+    <span class="ico"><ion-icon name="image-outline"></ion-icon></span>
+    <span class="txt"><b>Upload a photo</b><small>Choose from your gallery</small></span>
+    <ion-icon class="go" name="chevron-forward"></ion-icon>
+    <input type="file" accept="image/*" (change)="pick($event)" />
+  </label>
+
+  <label class="tile">
+    <span class="ico"><ion-icon name="cloud-upload-outline"></ion-icon></span>
+    <span class="txt"><b>Upload a file</b><small>PDF or image from your device</small></span>
+    <ion-icon class="go" name="chevron-forward"></ion-icon>
+    <input type="file" accept="application/pdf,image/*" (change)="pick($event)" />
+  </label>
+
+  <p class="note"><ion-icon name="lock-closed-outline"></ion-icon> Stored privately on your device</p>
+</div>

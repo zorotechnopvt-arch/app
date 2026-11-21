@@ -1,0 +1,103 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-bg-wave" aria-hidden="true">
+    <svg viewBox="0 0 400 260" preserveAspectRatio="none">
+      <defs><linearGradient id="vw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb27a" stop-opacity=".5" /><stop offset="1" stop-color="#ffe3cf" stop-opacity=".08" /></linearGradient></defs>
+      <path d="M0 0H400V170C350 195 300 110 230 100C160 90 120 150 60 120C30 105 10 70 0 60Z" fill="url(#vw)" />
+    </svg>
+  </div>
+
+  <div class="z-wrap" *ngIf="vm$ | async as vm">
+    <header class="top z-rise">
+      <div>
+        <p class="hi">{{ greeting }}</p>
+        <h1 class="z-title">{{ first }}</h1>
+      </div>
+      <a class="avatar" routerLink="/app/profile" aria-label="Profile">
+        <img *ngIf="user?.picture; else ini" [src]="user.picture" alt="" referrerpolicy="no-referrer" />
+        <ng-template #ini>{{ first.charAt(0) }}</ng-template>
+      </a>
+    </header>
+
+    <a class="z-pill-input search z-rise" routerLink="/app/documents" style="animation-delay:.05s">
+      <ion-icon name="search-outline"></ion-icon><span>Search your documents</span>
+    </a>
+
+    <a class="pending z-rise" *ngIf="records.pending()" routerLink="/app/consent" style="animation-delay:.05s">
+      <span class="p-ico"><ion-icon name="business-outline"></ion-icon><span class="ping"></span></span>
+      <span class="p-txt">
+        <small><span class="live"></span>Consent request · Action needed</small>
+        <b>{{ records.currentRequest()?.hospital }} wants to view your health reports<ng-container *ngIf="records.pendingList().length > 1"> (+{{ records.pendingList().length - 1 }} more)</ng-container></b>
+      </span>
+      <span class="p-go">Review<ion-icon name="arrow-forward-outline"></ion-icon></span>
+    </a>
+
+    <div class="quick z-rise" style="animation-delay:.08s">
+      <a class="q" routerLink="/app/find">
+        <span class="qi"><ion-icon name="call-outline"></ion-icon></span>
+        <b>Find records</b><small>Search by mobile number</small>
+      </a>
+      <a class="q" [class.hot]="records.attention()" routerLink="/app/consent">
+        <span class="qi blue"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+        <b>Consent</b>
+        <small>{{ records.pending() ? records.pendingList().length + (records.pendingList().length === 1 ? ' request pending' : ' requests pending') : records.activeCount() ? records.activeCount() + ' active' : 'Manage sharing' }}</small>
+        <span class="pdot" *ngIf="records.attention()"></span>
+        <span class="tag" [class.live]="!records.pending()" *ngIf="records.attention()">{{ records.pending() ? 'Pending' : 'Active' }}</span>
+      </a>
+    </div>
+
+    <section class="hero z-rise" style="animation-delay:.1s">
+      <div class="hero-text">
+        <span class="num">{{ vm.total }}</span>
+        <span class="lbl">{{ vm.total === 1 ? 'document' : 'documents' }} safely stored</span>
+        <span class="pill"><ion-icon name="lock-closed-outline"></ion-icon> Private to you</span>
+      </div>
+      <svg class="hero-shield" viewBox="0 0 120 140" aria-hidden="true">
+        <path d="M60 8l44 16v40c0 30-19 52-44 64C35 116 16 94 16 64V24z" fill="#fff" opacity=".22" />
+        <path d="M60 20l34 12.5v31c0 24-15 41-34 50-19-9-34-26-34-50v-31z" fill="#fff" opacity=".95" />
+        <rect x="46" y="60" width="28" height="22" rx="5" fill="#ff6a13" />
+        <path d="M51 60v-6a9 9 0 0 1 18 0v6" fill="none" stroke="#ff6a13" stroke-width="5" stroke-linecap="round" />
+      </svg>
+    </section>
+
+    <section class="z-section" *ngIf="vm.pending">
+      <a class="notice z-rise" routerLink="/app/documents" [queryParams]="{ filter: 'review' }">
+        <ion-icon name="sparkles-outline"></ion-icon>
+        <span><b>{{ vm.pending }}</b> {{ vm.pending === 1 ? 'document needs' : 'documents need' }} a quick review</span>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </a>
+    </section>
+
+    <section class="z-section" *ngIf="vm.attention.length">
+      <div class="z-section-head"><h2>Needs attention</h2><a routerLink="/app/alerts">See all</a></div>
+      <div class="hscroll">
+        <a class="attn" *ngFor="let d of vm.attention.slice(0, 6)" [routerLink]="['/app/document', d.id]" [ngClass]="exp(d)?.state">
+          <ion-icon name="warning-outline"></ion-icon>
+          <b>{{ d.title }}</b>
+          <span>{{ exp(d)?.label }}</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="z-section">
+      <div class="z-section-head"><h2>Categories</h2></div>
+      <div class="grid">
+        <a class="cat z-rise" *ngFor="let c of vm.categories; let i = index" [routerLink]="['/app/category', c.id]" [style.animation-delay]="(0.12 + i * 0.04) + 's'">
+          <span class="ico" [style.background]="c.bg"><ion-icon [name]="c.icon" [style.color]="c.color"></ion-icon></span>
+          <b>{{ c.label }}</b>
+          <small>{{ c.count }} {{ c.count === 1 ? 'file' : 'files' }}</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="z-section">
+      <div class="z-section-head"><h2>Recently added</h2><a routerLink="/app/documents" *ngIf="vm.total > 4">See all</a></div>
+      <app-doc-row *ngFor="let d of vm.recent" [doc]="d"></app-doc-row>
+      <div class="z-card z-empty" *ngIf="!vm.total && vm.ready">
+        <ion-icon name="scan-outline"></ion-icon>
+        <h3>Your vault is empty</h3>
+        <p>Scan or upload a document and we'll file it in the right category for you.</p>
+        <ion-button class="z-btn" (click)="add()">Add your first document</ion-button>
+      </div>
+    </section>
+  </div>
+</ion-content>

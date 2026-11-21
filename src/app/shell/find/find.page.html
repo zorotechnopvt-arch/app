@@ -1,0 +1,103 @@
+<ion-content class="z-page" [fullscreen]="true">
+  <div class="z-bg-wave" aria-hidden="true">
+    <svg viewBox="0 0 400 260" preserveAspectRatio="none">
+      <defs><linearGradient id="fw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb27a" stop-opacity=".5" /><stop offset="1" stop-color="#ffe3cf" stop-opacity=".08" /></linearGradient></defs>
+      <path d="M0 0H400V160C350 185 300 100 230 90C160 80 120 140 60 110C30 95 10 60 0 50Z" fill="url(#fw)" />
+    </svg>
+  </div>
+
+  <div class="z-wrap">
+    <button class="z-back" type="button" routerLink="/app/vault" aria-label="Back"><ion-icon name="chevron-back"></ion-icon></button>
+
+    <!-- 1. phone -->
+    <section *ngIf="step() === 'phone'" class="stage z-rise">
+      <div class="hero-ico"><ion-icon name="call-outline"></ion-icon><span class="ring"></span></div>
+      <h1 class="z-title">Find your records</h1>
+      <p class="z-sub">Enter the mobile number linked to your health records. We'll verify it's yours with a one-time code.</p>
+
+      <label class="phone z-pill-input" [class.bad]="phone().length === 10 && !validPhone()">
+        <span class="cc">+91</span>
+        <input type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210" [value]="display()" (input)="onPhone($event)" (keyup.enter)="sendCode()" aria-label="Mobile number" />
+      </label>
+      <p class="hint" *ngIf="phone().length === 10 && !validPhone()">Enter a valid 10-digit mobile number.</p>
+
+      <ion-button expand="block" class="z-btn go" [disabled]="!validPhone()" (click)="sendCode()">
+        Send code <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+
+      <div class="note z-card"><ion-icon name="lock-closed-outline"></ion-icon>
+        <span>Your number is only used to find records linked to you. Nothing is shown until you verify the code.</span></div>
+    </section>
+
+    <!-- 2. otp -->
+    <section *ngIf="step() === 'otp'" class="stage z-rise">
+      <div class="hero-ico"><ion-icon name="shield-checkmark-outline"></ion-icon><span class="ring"></span></div>
+      <h1 class="z-title">Verify it's you</h1>
+      <p class="z-sub">We sent a 6-digit code to <b>{{ full() }}</b>.</p>
+
+      <div class="otp" [class.shake]="otpError()" [class.busy]="verifying()">
+        <div class="box" *ngFor="let i of boxes" [class.on]="otp().length === i && !verifying()" [class.filled]="otp().length > i" [class.err]="otpError()">{{ otp()[i] || '' }}</div>
+        <input class="otp-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" [disabled]="verifying()" (input)="onOtp($event)" aria-label="One-time code" />
+      </div>
+      <p class="hint err" *ngIf="otpError()">That code isn't right. Try again.</p>
+      <p class="demo" *ngIf="!otpError()"><ion-icon name="information-circle-outline"></ion-icon> Demo code: <b>{{ demoOtp }}</b></p>
+
+      <div class="verifying" *ngIf="verifying()"><ion-spinner name="dots"></ion-spinner> Verifying…</div>
+
+      <div class="links">
+        <button type="button" (click)="changeNumber()">Change number</button>
+        <button type="button" [disabled]="resendIn() > 0" (click)="resend()">{{ resendIn() > 0 ? 'Resend in ' + resendIn() + 's' : 'Resend code' }}</button>
+      </div>
+    </section>
+
+    <!-- 3. searching -->
+    <section *ngIf="step() === 'searching'" class="stage z-rise">
+      <div class="radar" aria-hidden="true"><span></span><span></span><span></span><ion-icon name="search-outline"></ion-icon></div>
+      <h1 class="z-title">Searching…</h1>
+      <p class="z-sub">Looking for records linked to <b>{{ full() }}</b></p>
+      <ul class="stages">
+        <li *ngFor="let s of stages; let i = index" [class.done]="progress() > i" [class.now]="progress() === i">
+          <span class="tick"><ion-icon *ngIf="progress() > i" name="checkmark"></ion-icon><ion-spinner *ngIf="progress() === i" name="crescent"></ion-spinner></span>{{ s }}
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. results -->
+    <section *ngIf="step() === 'results'" class="stage results">
+      <div class="res-head z-rise">
+        <div>
+          <h1 class="z-title">{{ results().length }} {{ results().length === 1 ? 'record' : 'records' }} found</h1>
+          <p class="z-sub">Linked to <b>{{ full() }}</b></p>
+        </div>
+        <span class="ok"><ion-icon name="checkmark"></ion-icon></span>
+      </div>
+
+      <article class="rec z-card z-rise" *ngFor="let r of results(); let i = index" [style.animation-delay]="(0.08 + i * 0.08) + 's'">
+        <div class="top">
+          <span class="ico"><ion-icon name="medkit-outline"></ion-icon></span>
+          <div class="meta">
+            <b>{{ r.title }}</b>
+            <span>{{ r.facility }} · {{ r.date | date: 'd MMM y' }}</span>
+            <span class="chips"><span class="z-chip">{{ r.type }}</span><span class="z-chip">PDF · {{ r.size }}</span></span>
+          </div>
+        </div>
+        <div class="actions">
+          <ion-button class="z-btn" (click)="view(r)"><ion-icon slot="start" name="eye-outline"></ion-icon>View</ion-button>
+          <ion-button class="z-btn-ghost" [disabled]="downloading() === r.id" (click)="download(r)">
+            <ion-icon slot="start" name="download-outline"></ion-icon>{{ downloading() === r.id ? 'Saving…' : 'Download' }}
+          </ion-button>
+        </div>
+      </article>
+
+      <a class="share-cta z-card z-rise" [class.hot]="attention()" routerLink="/app/consent" style="animation-delay:.28s">
+        <span class="ico"><ion-icon name="business-outline"></ion-icon></span>
+        <span class="txt"><b>{{ pending() ? (currentReq()?.hospital || 'A hospital') + ' is waiting for your consent' : 'Share with a hospital' }}</b><small>Choose which reports to share and approve consent</small></span>
+        <span class="pdot" *ngIf="attention()"></span>
+        <span class="tag" *ngIf="pending()">Pending</span>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </a>
+
+      <button class="again" type="button" (click)="restart()">Search another number</button>
+    </section>
+  </div>
+</ion-content>
